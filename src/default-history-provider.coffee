@@ -1,4 +1,4 @@
-{Patch} = require 'superstring'
+{Patch} = require './superstring'
 MarkerLayer = require './marker-layer'
 {traversal} = require './point-helpers'
 {patchFromChanges} = require './helpers'

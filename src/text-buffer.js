@@ -1,11 +1,11 @@
 const {Emitter, CompositeDisposable} = require('event-kit')
-const {File} = require('pathwatcher')
+const {File} = require('./pathwatcher')
 const diff = require('diff')
 const _ = require('underscore-plus')
 const path = require('path')
 const crypto = require('crypto')
 const mkdirp = require('mkdirp')
-const superstring = require('superstring')
+const superstring = require('./superstring')
 const NativeTextBuffer = superstring.TextBuffer
 const Point = require('./point')
 const Range = require('./range')
