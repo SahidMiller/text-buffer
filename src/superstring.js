@@ -1,10 +1,12 @@
 const VsCodeTextBuffer = require('@sahidmiller/textbuffer')
 window.VsCodeTextBuffer = VsCodeTextBuffer
 const { PieceTreeTextBufferBuilder } = VsCodeTextBuffer
-// const TermKitTextBuffer = require("terminal-kit/lib/TextBuffer")
+const Marker = require('./marker')
 
-const Range = require('text-buffer/lib/range')
-const Point = require('text-buffer/lib/point')
+// const TermKitTextBuffer = require('terminal-kit/lib/TextBuffer')
+
+const Range = require('./range')
+const Point = require('./point')
 const fs = require('fs')
 
 const DefaultLineFeeds = {
@@ -13,19 +15,18 @@ const DefaultLineFeeds = {
 }
 
 class TextBuffer {
-  constructor() {
+  constructor () {
     const textBufferBuilder = new PieceTreeTextBufferBuilder()
     const textBufferTreeFactory = textBufferBuilder.finish(true)
 
     this._buffer = textBufferTreeFactory.create(DefaultLineFeeds.LF)
   }
 
-    // Extended: Return true if the buffer contains any astral-plane Unicode characters that
+  // Extended: Return true if the buffer contains any astral-plane Unicode characters that
   // are encoded as surrogate pairs.
   //
   // Returns a {Boolean}.
   hasAstral () {
-    //debugger
     if (this.cachedHasAstral !== null) {
       return this.cachedHasAstral
     } else {
@@ -39,9 +40,8 @@ class TextBuffer {
   //
   // Returns a {Promise} that resolves with the first {Range} of text that
   // matches the given regex.
-  find (regex) { 
-    //debugger
-    return this.buffer.find(regex) 
+  find (regex) {
+    return this.buffer.find(regex)
   }
 
   // Experimental: Asynchronously search a given range of the buffer for a given regex.
@@ -51,9 +51,8 @@ class TextBuffer {
   //
   // Returns a {Promise} that resolves with the first {Range} of text that
   // matches the given regex.
-  findInRange (regex, range) { 
-    //debugger
-    return this.buffer.findInRange(regex, range) 
+  findInRange (regex, range) {
+    return this.buffer.findInRange(regex, range)
   }
 
   // Experimental: Search the buffer for a given regex.
@@ -61,9 +60,8 @@ class TextBuffer {
   // * `regex` A {RegExp} to search for.
   //
   // Returns the first {Range} of text that matches the given regex.
-  findSync (regex) { 
-    //debugger
-    return this.buffer.findSync(regex) 
+  findSync (regex) {
+    return this.buffer.findSync(regex)
   }
 
   // Experimental: Search a given range of the buffer for a given regex.
@@ -72,9 +70,8 @@ class TextBuffer {
   // * `range` A {Range} to search within.
   //
   // Returns the first {Range} of text that matches the given regex.
-  findInRangeSync (regex, range) { 
-    //debugger
-    return this.buffer.findInRangeSync(regex, range) 
+  findInRangeSync (regex, range) {
+    return this.buffer.findInRangeSync(regex, range)
   }
 
   // Experimental: Asynchronously search the buffer for a given regex.
@@ -83,9 +80,8 @@ class TextBuffer {
   //
   // Returns a {Promise} that resolves with an {Array} containing every
   // {Range} of text that matches the given regex.
-  findAll (regex) { 
-    //debugger
-    return this.buffer.findAll(regex) 
+  findAll (regex) {
+    return this.buffer.findAll(regex)
   }
 
   // Experimental: Asynchronously search a given range of the buffer for a given regex.
@@ -95,25 +91,23 @@ class TextBuffer {
   //
   // Returns a {Promise} that resolves with an {Array} containing every
   // {Range} of text that matches the given regex.
-  findAllInRangeSync (regex, range) { 
-    //debugger
-    
-    const textInRange = this.getTextInRange(range);
-    const matches = Array.from(textInRange.matchAll(regex));
-    
-    const offsetStart = this.buffer.getOffsetAt(range.start.row + 1, range.start.column + 1);    
+  findAllInRangeSync (regex, range) {
+    const textInRange = this.getTextInRange(range)
+    const matches = Array.from(textInRange.matchAll(regex))
+
+    const offsetStart = this.buffer.getOffsetAt(range.start.row + 1, range.start.column + 1)
     return matches.map(match => {
       const [matchText] = match
       const { index } = match
 
-      //TODO God willing: result range probably starts at the position
+      // TODO God willing: result range probably starts at the position
       const resultOffsetStart = offsetStart + index
-      const startPos = this.buffer.getPositionAt(resultOffsetStart);
-      const endPos = this.buffer.getPositionAt(resultOffsetStart + matchText.length);
+      const startPos = this.buffer.getPositionAt(resultOffsetStart)
+      const endPos = this.buffer.getPositionAt(resultOffsetStart + matchText.length)
 
       return Range(
-        Point(startPos.lineNumber - 1,  startPos.column - 1), 
-        Point(endPos.lineNumber - 1,  endPos.column - 1)
+        Point(startPos.lineNumber - 1, startPos.column - 1),
+        Point(endPos.lineNumber - 1, endPos.column - 1)
       )
     })
   }
@@ -124,9 +118,8 @@ class TextBuffer {
   //
   // Returns an {Array} containing every {Range} of text that matches the given
   // regex.
-  findAllSync (regex) { 
-    //debugger
-    return this.buffer.findAllSync(regex) 
+  findAllSync (regex) {
+    return this.buffer.findAllSync(regex)
   }
 
   // Experimental: Search a given range of the buffer for a given regex.
@@ -136,9 +129,8 @@ class TextBuffer {
   //
   // Returns an {Array} containing every {Range} of text that matches the given
   // regex.
-  findAllInRange (regex, range) { 
-    //debugger
-    return this.findAllInRangeSync(regex, range) 
+  findAllInRange (regex, range) {
+    return this.findAllInRangeSync(regex, range)
   }
 
   // Experimental: Find fuzzy match suggestions in the buffer
@@ -151,7 +143,6 @@ class TextBuffer {
   // Returns an {Array} containing every {SubsequenceMatch} of text that matches the given
   // query.
   findWordsWithSubsequence (query, extraWordCharacters, maxCount) {
-    //debugger
     return this.buffer.findWordsWithSubsequence(query, extraWordCharacters, maxCount)
   }
 
@@ -166,7 +157,6 @@ class TextBuffer {
   // Returns an {Array} containing every {SubsequenceMatch} of text that matches the given
   // query in the given range.
   findWordsWithSubsequenceInRange (query, extraWordCharacters, maxCount, range) {
-    //debugger
     return this.buffer.findWordsWithSubsequenceInRange(query, extraWordCharacters, maxCount, range)
   }
 
@@ -179,7 +169,6 @@ class TextBuffer {
   //
   // Returns an {Array} of {Marker}s representing the matches.
   findAndMarkAllInRangeSync (markerLayer, regex, range, options = {}) {
-    //debugger
     const startId = this.nextMarkerId
     const exclusive = options.invalidate === 'inside' || !options.tailed
     this.nextMarkerId += this.buffer.findAndMarkAllSync(
@@ -201,26 +190,26 @@ class TextBuffer {
   // Public: Get the number of lines in the buffer.
   //
   // Returns a {Number}.
-  getLineCount () { 
-    return this.buffer.getLineCount() 
+  getLineCount () {
+    return this.buffer.getLineCount()
   }
-  
+
   // Public: Get the maximal position in the buffer, where new text would be
   // appended.
   //
   // Returns a {Point}.
-  getExtent () { 
-    const lineCount = this.buffer.getLineCount();
-    const lineLength = this.buffer.getLineLength(lineCount);
+  getExtent () {
+    const lineCount = this.buffer.getLineCount()
+    const lineLength = this.buffer.getLineLength(lineCount)
 
-    return Point(lineCount - 1, lineLength);
+    return Point(lineCount - 1, lineLength)
   }
 
   // Public: Get the length of the buffer's text.
   getLength () {
-    return this.buffer.getLength() 
+    return this.buffer.getLength()
   }
-  
+
   // Public: Convert a position in the buffer in row/column coordinates to an
   // absolute character offset, inclusive of line ending characters.
   //
@@ -230,7 +219,6 @@ class TextBuffer {
   //
   // Returns a {Number}.
   characterIndexForPosition (position) {
-    //debugger
     return this.buffer.characterIndexForPosition(Point.fromObject(position))
   }
 
@@ -243,7 +231,6 @@ class TextBuffer {
   //
   // Returns a {Point}.
   positionForCharacterIndex (offset) {
-    //debugger
     return Point.fromObject(this.buffer.positionForCharacterIndex(offset))
   }
 
@@ -255,7 +242,6 @@ class TextBuffer {
   //
   // Returns a {Boolean}.
   isEmpty () {
-    //debugger
     return this.buffer.getLength() === 0
   }
 
@@ -264,14 +250,13 @@ class TextBuffer {
   //
   // Returns a {String}.
   getText () {
-    const start = Point(0, 0);
-    const end = this.getExtent();
+    const start = Point(0, 0)
+    const end = this.getExtent()
 
-    return this.getTextInRange(Range(start, end));
+    return this.getTextInRange(Range(start, end))
   }
 
   getCharacterAtPosition (position) {
-    //debugger
     return this.buffer.getCharacterAtPosition(Point.fromObject(position))
   }
 
@@ -281,11 +266,11 @@ class TextBuffer {
   //
   // Returns a {String}
   getTextInRange (range) {
-    const offsetStart = this.buffer.getOffsetAt(range.start.row + 1, range.start.column + 1);
+    const offsetStart = this.buffer.getOffsetAt(range.start.row + 1, range.start.column + 1)
     const offsetEnd = this.buffer.getOffsetAt(range.end.row + 1, range.end.column + 1)
 
-    const startPos = this.buffer.getPositionAt(offsetStart);
-    const endPos = this.buffer.getPositionAt(offsetEnd);
+    const startPos = this.buffer.getPositionAt(offsetStart)
+    const endPos = this.buffer.getPositionAt(offsetEnd)
 
     const val = this.buffer.getValueInRange({
       startLineNumber: startPos.lineNumber,
@@ -301,7 +286,6 @@ class TextBuffer {
   //
   // Returns an {Array} of {String}s.
   getLines () {
-    //debugger
     return this.buffer.getLines()
   }
 
@@ -310,11 +294,10 @@ class TextBuffer {
   //
   // Returns a {String}.
   getLastLine () {
-    //debugger
     return this.lineForRow(this.getLastRow())
   }
 
-  getLastRow() {
+  getLastRow () {
     this.buffer.getLineCount()
   }
 
@@ -336,8 +319,8 @@ class TextBuffer {
   // `'\n'`, `'\r\n'`, or `''` for the last line of the buffer, which
   // doesn't end in a newline.
   lineEndingForRow (row) {
-    const lineNum = row + 1;
-    if (this.getLineCount() === lineNum) return '';
+    const lineNum = row + 1
+    if (this.getLineCount() === lineNum) return ''
     return this.buffer.getEOL()
   }
 
@@ -364,124 +347,110 @@ class TextBuffer {
   //
   // Returns the {Range} of the inserted text.
   setTextInRange (range, newText) {
-    //debugger
-    const offsetStart = this.buffer.getOffsetAt(range.start.row + 1, range.start.column + 1);
-    
+    const offsetStart = this.buffer.getOffsetAt(range.start.row + 1, range.start.column + 1)
+
     if (!newText) {
-      const offsetEnd = this.buffer.getOffsetAt(range.end.row + 1, range.end.column + 1);
+      const offsetEnd = this.buffer.getOffsetAt(range.end.row + 1, range.end.column + 1)
       return this.buffer.delete(offsetStart, offsetEnd - offsetStart)
     }
 
-    return this.buffer.insert(offsetStart, newText);
+    return this.buffer.insert(offsetStart, newText)
   }
 
-  baseTextMatchesFile(source, encoding) {
-    //debugger
+  baseTextMatchesFile (source, encoding) {
   }
 
-  baseTextDigest() {
-    //debugger
+  baseTextDigest () {
   }
 
-  deserializeChanges() {
-    //debugger
-  }
-  
-  serializeChanges() {
-    //debugger
+  deserializeChanges () {
   }
 
-  reset() {
-    //debugger
+  serializeChanges () {
   }
 
-  isModified() {
-    //debugger
+  reset () {
   }
 
-  async save(pathOrStream, encoding) {
-    //https://nodejs.org/api/fs.html#fs_filehandle_write_buffer_offset_length_position
+  isModified () {
+  }
+
+  async save (pathOrStream, encoding) {
+    // https://nodejs.org/api/fs.html#fs_filehandle_write_buffer_offset_length_position
 
     const val = this.getText()
-    return await new Promise((res, rej) => {
+    return new Promise((resolve, reject) => {
       fs.writeFile(pathOrStream, val, { encoding }, (err) => {
-        err ? rej(err) : res()
-      });
-    });
+        err ? reject(err) : resolve()
+      })
+    })
   }
 
-  loadSync(pathOrStream, encoding, cb) {
-    //debugger
+  loadSync (pathOrStream, encoding, cb) {
   }
 
-  async load(pathOrStream, options, cb) {
-    //https://nodejs.org/api/fs.html#fs_fs_read_fd_buffer_offset_length_position_callback
+  async load (pathOrStream, options, cb) {
+    // https://nodejs.org/api/fs.html#fs_fs_read_fd_buffer_offset_length_position_callback
 
-    const { encoding, force, patch } = options
-    const data = await new Promise((res, rej) => {
+    const { encoding } = options
+    const data = await new Promise((resolve, reject) => {
       fs.readFile(pathOrStream, { encoding }, (err, data) => {
-        err ? rej(err) : res(data)
-      });
-    });
+        err ? reject(err) : resolve(data)
+      })
+    })
 
-    this.setTextInRange(Range(Point(0, 0)), data);
+    this.setTextInRange(Range(Point(0, 0)), data)
   }
 
-  getMarkerLayer(id) {
-    //debugger
+  getMarkerLayer (id) {
   }
 
-  addMarkerLayer(options) {
-    //debugger
+  addMarkerLayer (options) {
   }
 
-  clipRange(range) {
-    //debugger
+  clipRange (range) {
   }
 
-  clipPosition(position) {
-    //debugger
+  clipPosition (position) {
   }
 
-  get transactCallDepth() {
-    //debugger
+  get transactCallDepth () {
+
   }
 
-  get languageMode() {
-    //debugger
-    //languageMode.onDidChangeHighlighting(cb)
+  get languageMode () {
+
+    // languageMode.onDidChangeHighlighting(cb)
   }
 
-  get nextDisplayLayerId() {
-    //debugger
+  get nextDisplayLayerId () {
+
   }
 
-  get displayLayers() {
-    //debugger
+  get displayLayers () {
+
   }
 
-  get maxUndoEntries() {
-    //debugger
+  get maxUndoEntries () {
+
   }
 
-  get buffer() {
+  get buffer () {
     return this._buffer
   }
 }
 
-const MarkerIndex = require("marker-index").default;
+const MarkerIndex = require('marker-index').default
 MarkerIndex.prototype.has = function (id) {
-  //debugger
   return !!this.endNodesById[id]
 }
 
 MarkerIndex.prototype.remove = function (id) {
-  //debugger
   return this.delete(id)
 }
 
 module.exports = {
-  Patch: require("atom-patch"),
+  Patch: require('atom-patch'),
   MarkerIndex,
   TextBuffer
 }
