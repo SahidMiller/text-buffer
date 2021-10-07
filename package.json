@@ -1,5 +1,5 @@
 {
-  "name": "@sahidmiller/text-buffer",
+  "name": "@sahidmiller/atom-textbuffer",
   "version": "13.18.8",
   "description": "A container for large mutable strings with annotated regions",
   "main": "./lib/text-buffer",
