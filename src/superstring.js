@@ -1,4 +1,4 @@
-const VsCodeTextBuffer = require('@sahidmiller/textbuffer')
+const VsCodeTextBuffer = require('@sahidmiller/vscode-textbuffer')
 window.VsCodeTextBuffer = VsCodeTextBuffer
 const { PieceTreeTextBufferBuilder } = VsCodeTextBuffer
 const Marker = require('./marker')

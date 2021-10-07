@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@sahidmiller/textbuffer@^1.0.0":
+"@sahidmiller/vscode-textbuffer@^1.0.0":
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@sahidmiller/textbuffer/-/textbuffer-1.0.0.tgz#30b899a967d77a614f5d77f17b0193f1dfc0ad87"
-  integrity sha512-0kgmjVcH+FhIIqpAP4mAbIo1/L5pAgWsP+tdZYpDcydc46sdpfuhHkCp3CoSe2hGW+pCvmenJP32fhoYKNhehQ==
+  resolved "https://registry.yarnpkg.com/@sahidmiller/vscode-textbuffer/-/vscode-textbuffer-1.0.0.tgz#8526f4257f5b2f10e9f531ee02e54dbd113e5118"
+  integrity sha512-6xhjllWr/hs5Af98VBxDqJArdkd9s2LNAiUbWfMNlthdRI4Hbw7Qv5+D4Y4rY+bnumUxAGg+1QADeu2zihNNBQ==
 
 "@types/node@^10.12.18":
   version "10.17.60"
